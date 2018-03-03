@@ -11,7 +11,7 @@ function startDB(obj){
           objectStore = db.createObjectStore("shops");
            
            objectStore.transaction.oncomplete = function(event) {
-               borrar();
+               createObjects(sh);
            }
        };
        
@@ -29,7 +29,8 @@ function addDB(obj, store, key){
       var transaction = db.transaction([store], "readwrite");
       var objectStore = transaction.objectStore(store);         
       var request = objectStore.put(obj, key);
-
+        console.log("aa");
+    
       request.onsuccess = function(event) {
           console.log("Objeto añadido: "+key);
       };
@@ -43,7 +44,7 @@ function updDB(obj, store, key){
       var transaction = db.transaction([store], "readwrite");
       var objectStore = transaction.objectStore(store); 
       var requestUpdate = objectStore.put(obj, key);
-      
+      console.log("aa");
   
 
           
@@ -60,16 +61,16 @@ function updDB(obj, store, key){
 function delDB(obj, store, key){
       var transaction = db.transaction([store], "readwrite");
       var objectStore = transaction.objectStore(store); 
-      var requestUpdate = objectStore.delete(key);
-      
+      var request = objectStore.delete(key);
+      console.log("aa");
 
           
           
-           requestUpdate.onerror = function(event) {
+           request.onerror = function(event) {
              console.log("error");
            };
           
-           requestUpdate.onsuccess = function(event) {
+           request.onsuccess = function(event) {
              console.log("objeto eliminado");
            };
 }

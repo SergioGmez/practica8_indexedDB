@@ -388,6 +388,7 @@ function delShopForm(){
                         }
 
                         if (aux !== -1){
+                            console.log(aux);
                             sh.removeShop(aux);
                             resultForm(true);
                         } else {
@@ -395,6 +396,7 @@ function delShopForm(){
                         }
                     } 
                 } catch (e){
+                    console.log(e);
                     resultForm(false); 
                 }
             }   

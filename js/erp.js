@@ -185,11 +185,11 @@ function StoreHouse(){
             while ( i < categories[indexCategory].products.length){
                 if (getCategoryProducts(categories[indexCategory].products[i], categories[0].products) === -1){
                   this.addProduct(categories[indexCategory].products[i], categories[0]);
-                  delDB(category, "categories", category.title);    
                 }
                 i++;
             }
             categories.splice(indexCategory, 1);
+            delDB(category, "categories", category.title); 
         }else{
             throw new CategoryNoExistsException();
         }
@@ -233,6 +233,7 @@ function StoreHouse(){
 		var productPosition = getProductIndex(product);
         if (productPosition === -1){
 			products.push(product);
+            addDB(product, "products", product.serialNumber);
 		}
         
         var categoryPosition = getCategoryIndex(category);
@@ -289,6 +290,7 @@ function StoreHouse(){
             }
             
             products.splice(productPosition, 1);
+            delDB(product, "products", product.serialNumber);
  
 		}else{
 			throw new ProductNotExistsException(product);
@@ -335,11 +337,13 @@ function StoreHouse(){
 		var productPosition = getProductIndex(product); 
 		if (productPosition === -1){
 			products.push(product);
+            addDB(product, "products", product.serialNumber);
 		}	
 
 		var shopPosition = getShopIndex(shop);
 		if (shopPosition === -1){
 			shopPosition = this.addShop(shop)-1;
+            addDB(shop, "shops", shop.cif);
 		}
 
 		var productShopPosition = getShopProducts(product, shops[shopPosition].products); 	
@@ -388,6 +392,7 @@ function StoreHouse(){
 		if (productShopPosition !== -1){
 			shops[shopPosition].products[productShopPosition].stock += num;
             product.stockGen += num;
+            updDB(product, "products", product.serialNumber);
 		}else{
 			throw new ProductNotExistsException(product);
 		}	
@@ -474,6 +479,7 @@ function StoreHouse(){
 		var indexShop = getShopIndex(shop);
         if (indexShop === -1){
             shops.push(shop);
+            addDB(shop, "shops", shop.cif);
         }else{
             throw new ShopExistsException(shop);
         }
@@ -488,19 +494,20 @@ function StoreHouse(){
 		}
         
 		var indexShop = getShopIndex(shop); 
-          
+    ;
         if (indexShop !== -1){
             var i = 0;
             
             while ( i < shops[indexShop].products.length){
                 var indexDef = getShopProducts(shops[indexShop].products[i].product, shops[0].products)
                 if (indexDef == -1){
-                   this.addProductInShop(shops[indexShop].products[i].product, shops[0], shops[indexShop].products[i].stock ); 
+                   this.addProductInShop(shops[indexShop].products[i].product, shops[0], shops[indexShop].products[i].stock );
                 }
 
                 i++;
             }
             shops.splice(indexShop, 1);
+            delDB(shop, "shops", shop.cif);
         }else{
             throw new ShopNotExistsException(shop);
         }
