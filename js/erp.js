@@ -107,8 +107,6 @@ function StoreHouse(){
 	var products = [];
     var categories = [];
     var shops = [];
-    var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    var db;
     
     //Definición de los metodos 'get' y 'set' del atributo name.
     Object.defineProperty(this, 'name', {
@@ -120,6 +118,12 @@ function StoreHouse(){
 				if (value === "" && value === undefined ) throw new EmptyValueException("name");		
 				name = value;
 			}		
+		});
+    
+    Object.defineProperty(this, 'products', {
+			get:function(){
+				return products;
+			},	
 		});
 	
     //Definición del metodo 'get' del atributo categories. Devuelve iterador.
@@ -134,6 +138,7 @@ function StoreHouse(){
 		}	
 	});
     
+    
     //Definición del metodo 'get' del atributo shops. Devuelve iterador.
     Object.defineProperty(this, 'shops', {
 		get:function(){
@@ -146,12 +151,6 @@ function StoreHouse(){
 		}	
 	});
     
-    Object.defineProperty(this, 'storeDB', {
-			get:function(){
-				return storeDB;
-			},	
-	});
-    
     //Método que permite añadir una categoria. Devuelve el número de categorias.
     this.addCategory = function(category){
 		if (!(category instanceof Category)){ 
@@ -162,13 +161,10 @@ function StoreHouse(){
 			throw new EmptyValueException(category);
 		}
         
-        
-        
 		var indexCategory = getCategoryIndex(category);
         if (indexCategory === -1){
             categories.push(category);
             addDB(category, "categories", category.title);
-
         }else{
             throw new CategoryExistsException();
         }
@@ -187,7 +183,10 @@ function StoreHouse(){
             var i = 0;
 
             while ( i < categories[indexCategory].products.length){
-                this.addProduct(categories[indexCategory].products[i], categories[0]);
+                if (getCategoryProducts(categories[indexCategory].products[i], categories[0].products) === -1){
+                  this.addProduct(categories[indexCategory].products[i], categories[0]);
+                  delDB(category, "categories", category.title);    
+                }
                 i++;
             }
             categories.splice(indexCategory, 1);
@@ -212,6 +211,12 @@ function StoreHouse(){
     
     //Categoría por defecto.
 	var defaultCategory = new Category ("Anonymous");
+	categories.push(defaultCategory);
+     Object.defineProperty(this, 'defaultCategory', {
+			get:function(){
+				return defaultCategory;
+			}	
+	 });
     
     //Metodo que permite añadir un producto con una categoria. Devuelve el numero de productos de dicha categoria.
     this.addProduct = function(product, category){
@@ -228,7 +233,6 @@ function StoreHouse(){
 		var productPosition = getProductIndex(product);
         if (productPosition === -1){
 			products.push(product);
-            addDB(product, "products", product.serialNumber);
 		}
         
         var categoryPosition = getCategoryIndex(category);
@@ -238,10 +242,13 @@ function StoreHouse(){
 		}	
         
         var productCategoryPos = getCategoryProducts(product, categories[categoryPosition].products);
-
+        
 		if (productCategoryPos === -1){
 			categories[categoryPosition].products.push(product);
-            this.addProductInShop(product, defaultShop, 0)
+            if (getShopProducts(product, shops[0].products) === -1){
+                this.addProductInShop(product, shops[0], 0);
+            }
+            
 		}else{
             throw new ProductExistsException(product);
 		}	
@@ -256,29 +263,33 @@ function StoreHouse(){
         
         var productPosition = getProductIndex(product);
 
-		var i = categories.length - 1, categoryPosition = -1;
-		while (i >= 0 && categoryPosition === -1){					
-			categoryPosition = getCategoryProducts(product, categories[i].products); 
-			i--;
-		}
-        
-        var y = shops.length - 1, shopPosition = -1;
-		while (y >= 0 && shopPosition === -1){					
-			shopPosition = getShopProducts(product, shops[y].products); 
-			y--;
-		}
+        if (productPosition !== -1){
+            
+            var index;
+            var categories = sh.categories;
+            var category = categories.next();
 
-		if (productPosition !== -1){
+            while (category.done !== true){
+                index = getCategoryProducts(product, category.value.products)
+                if ( index !== -1){
+                   category.value.products.splice(index, 1);
+                }
+                category = categories.next();
+            }
+
+            var shops = sh.shops;
+            var shop = shops.next();
+            while (shop.done !== true){
+                index = getShopProducts(product, shop.value.products)
+
+                if ( index !== -1){
+                    shop.value.products.splice(index, 1);
+                }
+                shop = shops.next();
+            }
+            
             products.splice(productPosition, 1);
-            
-            if (categoryPosition !== -1 ){
-                categories[i+1].products.splice(categoryPosition, 1);
-            }
-			
-            if (shopPosition !== -1 ){
-                shops[y+1].products.splice(shopPosition, 1);
-            }
-            
+ 
 		}else{
 			throw new ProductNotExistsException(product);
 		}
@@ -324,13 +335,11 @@ function StoreHouse(){
 		var productPosition = getProductIndex(product); 
 		if (productPosition === -1){
 			products.push(product);
-            addDB(product, "products", product.serialNumber);
 		}	
 
 		var shopPosition = getShopIndex(shop);
 		if (shopPosition === -1){
 			shopPosition = this.addShop(shop)-1;
-            addDB(shop, "shops", shop.cif);
 		}
 
 		var productShopPosition = getShopProducts(product, shops[shopPosition].products); 	
@@ -452,8 +461,8 @@ function StoreHouse(){
 		return shopProducts.findIndex(compareElements);	
 	}
     
-   //Método que añade una tienda.
-   this.addShop = function(shop){
+    //Método que añade una tienda.
+    this.addShop = function(shop){
 		if (!(shop instanceof Shop)){ 
 			throw new ShopStoreHouseException();
 		}
@@ -465,7 +474,6 @@ function StoreHouse(){
 		var indexShop = getShopIndex(shop);
         if (indexShop === -1){
             shops.push(shop);
-            addDB(shop, "shops", shop.cif);
         }else{
             throw new ShopExistsException(shop);
         }
@@ -473,8 +481,8 @@ function StoreHouse(){
         return shops.length;
 	}
     
-   //Método que elimina una tienda.
-   this.removeShop = function(shop){
+    //Método que elimina una tienda.
+    this.removeShop = function(shop){
 		if (!(shop instanceof Shop)) { 
 			throw new ShopStoreHouseException();
 		}
@@ -568,62 +576,7 @@ function StoreHouse(){
     //Tienda por defecto.
     var coord = new Coords(14, 68);
 	var defaultShop = new Shop("0123", "General", coord);
-	
-    
-   function startDB(obj){
-            
-       var request = indexedDB.open("store", 1);
-       
-       request.onupgradeneeded = function (e) {
-          db = event.target.result;
-           console.log(db);
-           
-          var objectStore = db.createObjectStore("products");
-          objectStore = db.createObjectStore("categories");  
-          objectStore = db.createObjectStore("shops");
-           
-           objectStore.transaction.oncomplete = function(event) {
-               addShop(defaultShop);
-               addCategory(defaultCategory);
-               borrar();
-           }
-       };
-       
-       request.onsuccess = function (e){
-           db = this.result;
-       };
-        
-       request.onerror = function (e){
-           alert('Error cargando la base de datos');
-       };
-   };
-    
-    
-    function addDB(obj, store, key){
-      var transaction = db.transaction([store], "readwrite");
-      var objectStore = transaction.objectStore(store);         
-      var request = objectStore.add(obj, key);
+    shops.push(defaultShop);
+	//this.addShop(defaultShop);
 
-      request.onsuccess = function(event) {
-          console.log("Objeto añadido: "+key);
-      };
-    }
-     
-startDB();
-
-};
-
-function borr(){
-    var DBDeleteRequest = window.indexedDB.deleteDatabase("store");
-
-    DBDeleteRequest.onerror = function(event) {
-      console.log("Error deleting database.");
-    };
-
-    DBDeleteRequest.onsuccess = function(event) {
-      console.log("Database deleted successfully");
-    };
 }
-
-//borr();
- 

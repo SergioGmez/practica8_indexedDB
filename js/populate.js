@@ -1,13 +1,15 @@
 "use strick";
-
+//addDB(category, "categories", category.title);
+//addDB(product, "products", product.serialNumber);
 function borrar(){
+
     var cat1 = new Category("Ropa");
     cat1.description = "Todo tipo de ropa";
     var cat2 = new Category("Tecnología");
     cat2.description = "Todo tipo de aparato electrónico";
     var cat3 = new Category("Libros");
     cat3.description = "Todo lo relacionado con la lectura";
-    
+
     var pro1 = new Product(1111, "Camiseta", 19.99);
    pro1.description = "Camiseta Roja para hombre";
    pro1.tax = 3;
@@ -72,7 +74,7 @@ function borrar(){
    sh.addProductInShop(pro5, shop2, 61);  
    sh.addProductInShop(book, shop1, 31);  
    sh.addProductInShop(tv, shop1, 11);  
-   sh.addProductInShop(tv, shop2, 4);  
+   sh.addProductInShop(tv, shop2, 4); 
 }
 
 function createObjects(){

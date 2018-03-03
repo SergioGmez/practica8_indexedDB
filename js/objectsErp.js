@@ -21,6 +21,7 @@ function Category(titleValue){
 			title = title.trim();
 			if (title === undefined || title === null) throw new EmptyValueException("title");					
 			title = value;
+            updDB(this, "categories", title);
 		}		
 	});		
 	
@@ -31,6 +32,7 @@ function Category(titleValue){
 		set:function(value){
 			if (value === undefined) throw new EmptyValueException("description");	
 			description = value;
+            updDB(this, "categories", title);
 		}		
 	});
     
@@ -76,8 +78,9 @@ function Product(serialNumberValue, nameValue, priceValue){
             },
             set:function(value){
                 if (value === undefined || value === '') throw new EmptyValueException("serialNumber");
-                if (typeof value !== 'number') throw new InvalidValueException("serialNumbe",value);
+                if (typeof value !== 'number') throw new InvalidValueException("serialNumber",value);
                 serialNumber = value;
+                updDB(this, "products", serialNumber);
             }
         });		
 
@@ -88,6 +91,7 @@ function Product(serialNumberValue, nameValue, priceValue){
             set:function(value){
                 if (value === undefined || value === '') throw new EmptyValueException("name");	
                 name = value;
+                updDB(this, "products", serialNumber);
             }		
         });			
 
@@ -98,6 +102,7 @@ function Product(serialNumberValue, nameValue, priceValue){
             set:function(value){
                 if (value === undefined || value === '') throw new EmptyValueException("description");	
                 description = value;
+                updDB(this, "products", serialNumber);
             }		
         });
 
@@ -109,6 +114,7 @@ function Product(serialNumberValue, nameValue, priceValue){
                 if (value === undefined || value === '') throw new EmptyValueException("price");
                 if (typeof value !== 'number') throw new InvalidValueException("price",value);
                 price = value;
+                updDB(this, "products", serialNumber);
             }		
         });
 
@@ -119,6 +125,7 @@ function Product(serialNumberValue, nameValue, priceValue){
             set:function(value){
                 if (value === undefined || value === '') throw new EmptyValueException("tax");	
                 tax = value;
+                updDB(this, "products", serialNumber);
             }		
         });
 
@@ -135,6 +142,7 @@ function Product(serialNumberValue, nameValue, priceValue){
             set:function(value){
                 if (value === undefined || value === '') throw new EmptyValueException("stockGen");	
                 stockGen = value;
+                updDB(this, "products", serialNumber);
             }		
         });
 
@@ -162,7 +170,8 @@ function Shirt(serialNumber, name, price, tailValue){
 			set:function(value){
 				if (typeof tail === undefined) throw new EmptyValueException("tail");
                 if (typeof value !== 'number') throw new InvalidValueException("pages",value);
-				tail = value;		
+				tail = value;
+                updDB(this, "products", serialNumber);
 			}		
 		});	
 }	
@@ -191,7 +200,8 @@ function Book(serialNumber, name, price, pagesValue){
 			set:function(value){
 				if (typeof pages === 'undefined') throw new EmptyValueException("pages");
                 if (typeof pages === 'Number') throw new InvalidValueException("pages",value); 
-				pages = value;		
+				pages = value;
+                updDB(this, "products", serialNumber);
 			}		
 		});	
 }	
@@ -220,7 +230,8 @@ function TV(serialNumber, name, price, inchesValue){
 			set:function(value){
 				if (typeof tail === undefined) throw new EmptyValueException("inches");
                 if (typeof Value !== 'number') throw new InvalidValueException("inches",value); 
-				inches = value;		
+				inches = value;
+                updDB(this, "products", serialNumber);
 			}		
 		});	
 }	
@@ -305,6 +316,7 @@ function Shop(cifValue, nameValue, coordsValue){
 		set:function(value){
 			if (value === undefined || value === '') throw new EmptyValueException("name");	
 			name = value;
+            updDB(this, "shops", cif);
 		}		
 	});			
 
@@ -315,6 +327,7 @@ function Shop(cifValue, nameValue, coordsValue){
 		set:function(value){
 			if (value === undefined || value === '') throw new EmptyValueException("direction");	
 			direction = value;
+            updDB(this, "shops", cif);
 		}		
 	});
     
@@ -325,6 +338,7 @@ function Shop(cifValue, nameValue, coordsValue){
 		set:function(value){
 			if (value === undefined || value === '') throw new EmptyValueException("phone");	
 			phone = value;
+            updDB(this, "shops", cif);
 		}		
 	});
     
@@ -337,6 +351,7 @@ function Shop(cifValue, nameValue, coordsValue){
 			    throw new CoordsStoreHouseException();
             }
             coords = value;
+            updDB(this, "shops", cif);
 		}		
 	});
     
