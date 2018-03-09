@@ -47,6 +47,14 @@ Category.prototype.constructor = Category;
 Category.prototype.toString = function (){	
 	return "Category: " + this.title + " (" + this.description + ")"; 
 };
+Category.prototype.getObject = function(){
+    return {
+        title: this.serialNumber,
+        description: this.description,
+        products: this.products
+    };
+}
+
 
 //Objeto Product
 function Product(serialNumberValue, nameValue, priceValue){
@@ -152,6 +160,18 @@ Product.prototype.constructor = Product;
 Product.prototype.toString = function (){	
     return "(SerialNumber: " + this.serialNumber + ") Name: "+this.name+" Price: "+this.price; 
 }
+Product.prototype.getObject = function(){
+    return {
+        serialNumber: this.serialNumber,
+        name: this.name,
+        description: this.description,
+        price: this.price,
+        tax: this.tax,
+        images: this.images,
+        stockGen: this.stockGen
+    };
+}
+
 
 //Objeto Shirt. Hereda del objeto product.
 function Shirt(serialNumber, name, price, tailValue){
@@ -179,6 +199,11 @@ Shirt.prototype = Object.create(Product.prototype);
 Shirt.prototype.constructor = Shirt;
 Shirt.prototype.toString = function (){	
     return "(SerialNumber: " + this.serialNumber + ") Name: "+this.name+" Price: "+this.price+" Tail "+this.tail; 
+}
+Shirt.prototype.getObject = function(){
+    return {
+
+    };
 }
   
 //Objeto Book. Hereda del objeto product.
@@ -344,7 +369,7 @@ function Shop(cifValue, nameValue, coordsValue){
     
     Object.defineProperty(this, 'coords', {
 		get:function(){
-			return tax;
+			return coords;
 		},
 		set:function(value){
 			if (!(value instanceof Coords)){ 
@@ -366,3 +391,13 @@ Shop.prototype.constructor = Shop;
 Shop.prototype.toString = function (){	
 	return "Shop: (" + this.cif + ") "+this.name; 
 };
+Shop.prototype.getObject = function(){
+    return {
+        cif: this.cif,
+        name: this.name,
+        directon: this.direction,
+        phone: this.phone,
+        coords: this.coords,
+        products: this.products
+    };
+}

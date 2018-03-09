@@ -1,26 +1,25 @@
 function startDB(obj){
             
-       var request = indexedDB.open("store", 1);
-       
-       request.onupgradeneeded = function (e) {
-          db = event.target.result;
-           console.log(db);
-           
-          var objectStore = db.createObjectStore("products");
-          objectStore = db.createObjectStore("categories");  
-          objectStore = db.createObjectStore("shops");
-           
-           objectStore.transaction.oncomplete = function(event) {
-               createObjects(sh);
-           }
-       };
-       
+     var request = indexedDB.open("store", 1);
+
+     request.onupgradeneeded = function (e) {
+         db = event.target.result;
+
+         var objectStore = db.createObjectStore("products");
+         objectStore = db.createObjectStore("categories");  
+         objectStore = db.createObjectStore("shops");
+
+         objectStore.transaction.oncomplete = function(event) {
+             createObjects(sh);
+         }
+     };
+
        request.onsuccess = function (e){
-           db = this.result;
+            db = this.result;
        };
-        
+
        request.onerror = function (e){
-           alert('Error cargando la base de datos');
+            alert('Error cargando la base de datos');
        };
 };
     
@@ -28,33 +27,31 @@ function startDB(obj){
 function addDB(obj, store, key){
       var transaction = db.transaction([store], "readwrite");
       var objectStore = transaction.objectStore(store);         
-      var request = objectStore.put(obj, key);
-        console.log("aa");
+      var request = objectStore.put(obj.getObject(), key);
+
     
       request.onsuccess = function(event) {
-          console.log("Objeto añadido: "+key);
+          //console.log("Objeto añadido: "+key);
       };
     
       request.onerror = function(event) {
-          console.log("aa: ");
+          //console.log("Error al añadir objeto");
       };  
-    }
+}
     
 function updDB(obj, store, key){
       var transaction = db.transaction([store], "readwrite");
       var objectStore = transaction.objectStore(store); 
-      var requestUpdate = objectStore.put(obj, key);
-      console.log("aa");
+      var request = objectStore.put(obj.getObject(), key);
   
-
-          
-           requestUpdate.onerror = function(event) {
-             
-           };
-          
-           requestUpdate.onsuccess = function(event) {
-             console.log("objeto actualizado");
-           };
+    
+      request.onsuccess = function(event) {
+          //console.log("Objeto actualizado: "+key);
+      };
+    
+      request.onerror = function(event) {
+          //console.log("Error al actualizar objeto");
+      };
       
 }
 
@@ -62,20 +59,18 @@ function delDB(obj, store, key){
       var transaction = db.transaction([store], "readwrite");
       var objectStore = transaction.objectStore(store); 
       var request = objectStore.delete(key);
-      console.log("aa");
-
           
           
-           request.onerror = function(event) {
-             console.log("error");
-           };
-          
-           request.onsuccess = function(event) {
-             console.log("objeto eliminado");
-           };
+      request.onsuccess = function(event) {
+          //console.log("Objeto eliminado: "+key);
+      };
+    
+      request.onerror = function(event) {
+          //console.log("Error al eliminado objeto");
+      };
 }
 
-function borr(){
+function deleteDB(){
     var DBDeleteRequest = window.indexedDB.deleteDatabase("store");
 
     DBDeleteRequest.onerror = function(event) {
@@ -88,5 +83,5 @@ function borr(){
 }
 
 startDB();
-//borr();
+//deleteDB();
  

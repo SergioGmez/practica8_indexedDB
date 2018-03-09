@@ -4,35 +4,44 @@ function createObjects(sh){
     
     var cat1 = new Category("Ropa");
     cat1.description = "Todo tipo de ropa";
+
     var cat2 = new Category("Tecnología");
     cat2.description = "Todo tipo de aparato electrónico";
+
     var cat3 = new Category("Libros");
     cat3.description = "Todo lo relacionado con la lectura";
+
     
    var pro1 = new Product(1111, "Camiseta", 19.99);
    pro1.description = "Camiseta Roja para hombre";
    pro1.tax = 3;
-   pro1.images.push("imagenes/camiseta_roja.jpg")    
+   pro1.images.push("imagenes/camiseta_roja.jpg");
+
    var pro2 = new Product(2222, "Portatil", 321.99)
    pro2.description = "HP - BS017 - i5 - 15.6";
    pro2.tax = 4;
    pro2.images.push("imagenes/portatil.jpg")
+
    var pro3 = new Product(3333, "Zapatos", 27.99);
    pro3.description = "Zapatos Hugo Boss";
    pro3.tax = 4;
-   pro3.images.push("imagenes/zapatos.jpg")
+   pro3.images.push("imagenes/zapatos.jpg");
+
    var pro4 = new Product(4444, "Vaqueros", 16.99);
    pro4.description = "Vaquero Pepe Jeans Soho Z63";
    pro4.tax = 5;
-   pro4.images.push("imagenes/vaqueros.jpg")
+   pro4.images.push("imagenes/vaqueros.jpg");
+   
    var pro5 = new Product(5555, "Movil", 189.49);
    pro5.description = " Móvil Huawei P8 Lite - Negro";
    pro5.tax = 5;
-   pro5.images.push("imagenes/movil.jpg")
+   pro5.images.push("imagenes/movil.jpg");
+
    var book = new Book(6666, "ESDLA", 20, 576);
    book.description = "La comunidad del anillo (tapa dura)";
    book.tax = 6;
-   book.images.push("imagenes/esdla.jpg")    
+   book.images.push("imagenes/esdla.jpg");
+   
    var tv = new TV(7777, "TV1", 1450, 48);
    tv.description = "WXGA LED HD";
    tv.tax = 6;
@@ -41,13 +50,16 @@ function createObjects(sh){
    var coor1 = new Coords(14, 68);
    var shop1 = new Shop(1234, "Shop1", coor1);
    shop1.direction = "C/ San Marcos N32";
-   shop1.phone = 123456789;    
+   shop1.phone = 123456789;
+
    var shop2 = new Shop(4321, "Shop2", coor1);
    shop2.direction = "C/ Calle1 N2";
-   shop2.phone = 987654321; 
+   shop2.phone = 987654321;
+
    var shop3 = new Shop(6221, "Shop3", coor1);
    shop3.direction = "C/ Calle Falsa N74";
-   shop3.phone = 282822110; 
+   shop3.phone = 282822110;
+
         
    sh.addProduct(pro1, cat1);
    sh.addProduct(pro3, cat1);
