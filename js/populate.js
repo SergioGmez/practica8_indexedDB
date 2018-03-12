@@ -85,10 +85,12 @@ function createObjects(sh){
 }
 
 function init(sh){
-    var initPop = initPopulate(sh);
-    initPop();
-    shopsMenusPopulate(sh);
-    menuForms();
+    setTimeout(function() {
+        var initPop = initPopulate(sh);
+        initPop();
+        shopsMenusPopulate(sh);
+        menuForms();
+    }, 1000); 
 }
 
 function initPopulate(sh){

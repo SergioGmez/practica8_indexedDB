@@ -66,22 +66,9 @@ function delDB(obj, store, key){
       };
     
       request.onerror = function(event) {
-          //console.log("Error al eliminado objeto");
+          //console.log("Error al eliminar objeto");
       };
 }
 
-function deleteDB(){
-    var DBDeleteRequest = window.indexedDB.deleteDatabase("store");
-
-    DBDeleteRequest.onerror = function(event) {
-      console.log("Error deleting database.");
-    };
-
-    DBDeleteRequest.onsuccess = function(event) {
-      console.log("Database deleted successfully");
-    };
-}
-
 startDB();
-//deleteDB();
  
